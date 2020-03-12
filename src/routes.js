@@ -33,7 +33,7 @@ var routes = [
   {
     path: "/product",
     name: "Tambahkan Paket",
-    icon: "ni box-2 text-red",
+    icon: "ni ni-bag-17 text-red",
     component: Product,
     layout: "/admin"
   },
