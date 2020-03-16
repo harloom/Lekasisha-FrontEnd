@@ -19,6 +19,7 @@ import Index from "views/Index.js";
 import Profile from "views/examples/Profile.js";
 import Maps from "views/examples/Maps.js";
 import Product from "views/productPage/ProductPage"
+import Category from "views/categoryPage/CategoryPage"
 import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
 
@@ -35,6 +36,13 @@ var routes = [
     name: "Tambahkan Paket",
     icon: "ni ni-bag-17 text-red",
     component: Product,
+    layout: "/admin"
+  },
+  {
+    path: "/category",
+    name: "Category",
+    icon: "ni ni-collection text-yellow",
+    component: Category,
     layout: "/admin"
   },
   {

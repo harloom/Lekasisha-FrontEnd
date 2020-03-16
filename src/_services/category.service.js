@@ -5,23 +5,28 @@ import { authHeader ,getAPI} from '_helpers';
 
 
 
-export const productService = {
+export const categoryService = {
   create,
   update,
   deleteById,
-  getAllPage,
-  detail
+  getAll
 };
 
 function create(fromData ){
   //passing from Data
+  /*
+  image:
+  name
+  description
+  backgroundColor
+  */
   console.log(fromData);
   const requestOptions ={ 
     method: 'POST',
         headers:{ ...authHeader(), 'Content-Type': 'application/json' },
         body: fromData
   }
-  return fetch(`${getAPI()}/product/new`,requestOptions)
+  return fetch(`${getAPI()}/category/new`,requestOptions)
   .then(handleResponse)
   .then(data=>{
     return data
@@ -30,14 +35,20 @@ function create(fromData ){
   });
 }
 
-function update({id,object}){
+function update(id,object){
   console.log(object);
+          /*
+	"name" : "Minuman",
+	"description" : "Seperti Es ,Just Buah dan dll",
+	"backgroundColor":"#48dbfb"
+
+        */
   const requestOptions ={ 
     method: 'PATCH',
         headers:{ ...authHeader(), 'Content-Type': 'application/json' },
         body: JSON.stringify(object)
   }
-  return fetch(`${getAPI()}/product/${id}/edit`,requestOptions)
+  return fetch(`${getAPI()}/category/${id}/edit`,requestOptions)
   .then(handleResponse)
   .then(data=>{
     return data
@@ -53,7 +64,7 @@ function deleteById(id){
         headers:{ ...authHeader(), 'Content-Type': 'application/json' },
         body: {}
   }
-  return fetch(`${getAPI()}/${id}`,requestOptions)
+  return fetch(`${getAPI()}/category/${id}`,requestOptions)
   .then(handleResponse)
   .then(data=>{
     return data
@@ -62,15 +73,14 @@ function deleteById(id){
   });
 }
 
-function getAllPage(idCategory,page){
+function getAll(){
   // console.log(object);
   const requestOptions ={ 
     method: 'GET',
         headers:{ ...authHeader(), 'Content-Type': 'application/json' },
-  
   }
   // product?category=5e47c8d223645f0023d6ed35&limit=10&page=1&sortWith=price&sort=asc
-  return fetch(`${getAPI()}/product?category=${idCategory},&limit=10&page=${page}&sortWith=price&sort=asc`,requestOptions)
+  return fetch(`${getAPI()}/category`,requestOptions)
   .then(handleResponse)
   .then(data=>{
     return data
@@ -79,20 +89,6 @@ function getAllPage(idCategory,page){
   });
 }
 
-function detail(id){
-  const requestOptions ={ 
-    method: 'GET',
-        headers:{ ...authHeader(), 'Content-Type': 'application/json' },
-   
-  }
-  return fetch(`${getAPI()}/product/detail/${id}`,requestOptions)
-  .then(handleResponse)
-  .then(data=>{ 
-    return data
-  }).catch(err=>{
-
-  });
-}
 
 
 function handleResponse(response) {
