@@ -32,6 +32,13 @@ var routes = [
     layout: "/admin"
   },
   {
+    path: "/transaksi",
+    name: "Kasir",
+    icon: "ni ni-cart text-dark",
+    component: Product,
+    layout: "/admin"
+  },
+  {
     path: "/product",
     name: "Tambahkan Paket",
     icon: "ni ni-bag-17 text-red",
