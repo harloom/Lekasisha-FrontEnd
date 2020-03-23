@@ -70,7 +70,7 @@ function getAllPage(idCategory,page){
   
   }
   // product?category=5e47c8d223645f0023d6ed35&limit=10&page=1&sortWith=price&sort=asc
-  return fetch(`${getAPI()}/product?category=${idCategory},&limit=10&page=${page}&sortWith=price&sort=asc`,requestOptions)
+  return fetch(`${getAPI()}/product?category=${idCategory}&limit=10&page=${page}&sortWith=price&sort=asc`,requestOptions)
   .then(handleResponse)
   .then(data=>{
     return data

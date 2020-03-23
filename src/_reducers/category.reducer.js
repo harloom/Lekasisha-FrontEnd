@@ -8,7 +8,7 @@ export function categorys(state = {}, action) {
       };
     case categoryConstants.GETALL_SUCCESS:
       return {
-        items: action.users
+        items: action.categorys
       };
     case categoryConstants.GETALL_FAILURE:
       return { 
@@ -18,30 +18,30 @@ export function categorys(state = {}, action) {
       // add 'deleting:true' property to user being deleted
       return {
         ...state,
-        items: state.items.map(user =>
-          user.id === action.id
-            ? { ...user, deleting: true }
-            : user
+        items: state.items.map(item =>
+          item.id === action.id
+            ? { ...item, deleting: true }
+            : item
         )
       };
     case categoryConstants.DELETE_SUCCESS:
       // remove deleted user from state
       return {
-        items: state.items.filter(user => user.id !== action.id)
+        items: state.items.filter(item => item.id !== action.id)
       };
     case categoryConstants.DELETE_FAILURE:
       // remove 'deleting:true' property and add 'deleteError:[error]' property to user 
       return {
         ...state,
-        items: state.items.map(user => {
-          if (user.id === action.id) {
+        items: state.items.map(item => {
+          if (item.id === action.id) {
             // make copy of user without 'deleting:true' property
-            const { deleting, ...userCopy } = user;
+            const { deleting, ...userCopy } = item;
             // return copy of user with 'deleteError:[error]' property
             return { ...userCopy, deleteError: action.error };
           }
 
-          return user;
+          return item;
         })
       };
     default:

@@ -68,13 +68,13 @@ function getAll() {
 
         categoryService.getAll()
             .then(
-              category => dispatch(success(category)),
+              categorys => dispatch(success(categorys)),
                 error => dispatch(failure(error.toString()))
             );
     };
 
     function request() { return { type: categoryConstants.GETALL_REQUEST } }
-    function success(category) { return { type: categoryConstants.GETALL_SUCCESS, category } }
+    function success(categorys) { return { type: categoryConstants.GETALL_SUCCESS, categorys } }
     function failure(error) { return { type: categoryConstants.GETALL_FAILURE, error } }
 }
 

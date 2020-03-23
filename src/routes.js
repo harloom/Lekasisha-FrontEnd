@@ -19,7 +19,7 @@ import Index from "views/Index.js";
 import Profile from "views/examples/Profile.js";
 import Maps from "views/examples/Maps.js";
 import Product from "views/productPage/ProductPage"
-import Category from "views/categoryPage/CategoryPage"
+import {Category} from "views/categoryPage/CategoryPage"
 import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
 

@@ -17,8 +17,8 @@ function createproduct(fromData) {
 
         productService.create(fromData)
             .then(
-                product => { 
-                    dispatch(success(product));
+                products => { 
+                    dispatch(success(products));
                     // history.push('/');
                 },
                 error => {
@@ -28,8 +28,8 @@ function createproduct(fromData) {
             );
     };
 
-    function request(product) { return { type: productConstants.CREATE_REQUEST, product } }
-    function success(product) { return { type: productConstants.CREATE_SUCCESS, product } }
+    function request(products) { return { type: productConstants.CREATE_REQUEST, products } }
+    function success(products) { return { type: productConstants.CREATE_SUCCESS, products } }
     function failure(error) { return { type: productConstants.CREATE_FAILURE, error } }
 }
 
@@ -57,24 +57,24 @@ function editproduct(id,object) {
             );
     };
 
-    function request(product) { return { type: productConstants.EDIT_REQUEST, product } }
-    function success(product) { return { type: productConstants.EDIT_SUCCESS, product } }
+    function request(products) { return { type: productConstants.EDIT_REQUEST, products } }
+    function success(products) { return { type: productConstants.EDIT_SUCCESS, products } }
     function failure(error) { return { type: productConstants.EDIT_FAILURE, error } }
 }
 
-function getAll() {
+function getAll(idCategory,page) {
     return dispatch => {
-        dispatch(request());
+        dispatch(request(idCategory, page));
 
-        productService.getAll()
+        productService.getAllPage(idCategory,page)
             .then(
-              product => dispatch(success(product)),
+                products => dispatch(success(products)),
                 error => dispatch(failure(error.toString()))
             );
     };
 
-    function request() { return { type: productConstants.GETALL_REQUEST } }
-    function success(product) { return { type: productConstants.GETALL_SUCCESS, product } }
+    function request(idCategory,page) { return { type: productConstants.GETALL_REQUEST ,idCategory} }
+    function success(products) { return { type: productConstants.GETALL_SUCCESS, products } }
     function failure(error) { return { type: productConstants.GETALL_FAILURE, error } }
 }
 
@@ -85,7 +85,7 @@ function _delete(id) {
 
         productService.deleteById(id)
             .then(
-                user => dispatch(success(id)),
+                id => dispatch(success(id)),
                 error => dispatch(failure(id, error.toString()))
             );
     };
