@@ -51,7 +51,7 @@ import {
 import Header from "components/Headers/Header.js";
 import { productActions,categoryActions  } from '_actions/index';
 
-class ProductPage extends React.Component {
+class KasirPage extends React.Component {
   constructor(props) {
     super(props);
 
@@ -67,54 +67,21 @@ class ProductPage extends React.Component {
             submitted: false
     };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChangeImage = this.handleChangeImage.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
 }
 
-handleChange(event) {
-  const { name, value } = event.target;
-  // const { user } = this.state;
-  this.setState({
-    dataFrom:{
-      [name]: value
-    }     
-  });
-}
-handleChangeImage(event){
-  this.setState({
-    dataFrom:{
-      photos:event.target.files[0]
-    }
-  });
-}
 
-handleSubmit(event) {
-  event.preventDefault();
-  this.setState({ submitted: true });
-  const {dataFrom} = this.state;
-  const formData = new FormData();
-  formData.append('photos',dataFrom.photos);
-  formData.append('name',dataFrom.name);
-  formData.append('description',dataFrom.description);
-  formData.append('price',dataFrom.price);
-  if (dataFrom.name && dataFrom.description && dataFrom.price && dataFrom.photos) {
-      this.props.submitProduct(formData);
-  }
-}
+
+
 handleDelete(event){
   event.preventDefault();
-  this.props.deleteProducts()
 }
 
-  componentDidMount(){
-    this.props.getCategorys();
-    this.props.getProducts();
+componentDidMount(){
+ 
     
 }
 
-  handleGetProduct = (event) => {
+handleGetProduct = (event) => {
     // console.log(event.target.value); 
     const id = event.target.value 
     this.props.getProducts(id,1);
@@ -133,78 +100,6 @@ handleDelete(event){
         <Container className="mt--7" fluid>
           {/* Table */}
           <Row>
-            <div className="col">
-              <Card className=" shadow">
-                <CardHeader className=" bg-transparent">
-                  <h3 className=" mb-0">Tambahkan Paket</h3>
-                </CardHeader>
-                <CardBody>
-                  <Form role="form"  onSubmit={this.handleSubmit}>
-                  <FormGroup>
-                <Label for="categorysSelect">Pilih Category</Label>
-                <Input onChange={this.handleChange} type="select" name="id_category" id="categorysSelect">
-                  {
-                    categorys.items&&categorys.items.map((item,index)=>
-                      <option key={item._id} value={item._id} >{item.name}</option>
-                    )
-                  }
-                
-           </Input>
-              </FormGroup>
-                <FormGroup>
-                  <InputGroup className="input-group-alternative mb-3">
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
-                        <i className="ni ni-tag" />
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input placeholder="Name" type="text" name="name"
-                    onChange={this.handleChange} />
-                  </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                  <InputGroup className="input-group-alternative mb-3">
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
-                        <i className="ni ni-align-center" />
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input placeholder="Deskripsi" type="text" name="description"
-                    onChange={this.handleChange}/>
-                  </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                  <InputGroup className="input-group-alternative">
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
-                        <i className="ni ni-ui-04" />
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input placeholder="Price" type="number" name="price"
-                    onChange={this.handleChange}/>
-                  </InputGroup>
-                </FormGroup>
-                
-                <div class="custom-file ">
-                <FormGroup>
-                <Label for="uploadIcon">Photos</Label>
-                <Input type="file"  name="photos" id="uploadIcon"
-                 onChange={this.handleChangeImage} />
-                <FormText color="muted">
-                  Upload Photo
-                </FormText>
-              </FormGroup>
-                </div>
-                <div className="text-center">
-                  <Button className="mt-4" color="primary" type="button">
-                    Tambahkan Paket
-                  </Button>
-                </div>
-                
-              </Form>
-                </CardBody>
-              </Card>
-            </div>
             <div className="col-12 mt-4">
             <Card>
             <CardHeader className=" bg-transparent">
@@ -322,11 +217,17 @@ handleDelete(event){
                                 </DropdownItem>
                                 <DropdownItem
                                   href="#pablo"
-                                  onClick={this.handleDelete}
+                                  onClick={e => e.preventDefault()}
                                 >
                                   Hapus
                                 </DropdownItem>
-                    
+                                <DropdownItem
+                                  href="#pablo"
+                                  value={item._id}
+                                  onClick={this.handleDelete}
+                                >
+                                  Something else here
+                                </DropdownItem>
                               </DropdownMenu>
                             </UncontrolledDropdown>
                           </td>
@@ -400,18 +301,18 @@ handleDelete(event){
   }
 }
 function mapState(state) {
-  const { categorys,products, authentication } = state;
-  const { user } = authentication
-  // console.log(state);
-  return { products,categorys,user };
+  // const { categorys,products, authentication } = state;
+  // const { user } = authentication
+  // // console.log(state);
+  // return { products,categorys,user };
 }
 const actionCreators = {
-  getProducts: productActions.getAll,
-  deleteProducts: productActions._delete,
+  // getProducts: productActions.getAll,
+  // deleteProducts: productActions._delete,
   getCategorys : categoryActions.getAll,
-  submitProduct : productActions.createproduct
+  // submitProduct : productActions.createproduct
 
 }
 
-const connectedCategoryPage = connect(mapState, actionCreators)(ProductPage);
-export default connectedCategoryPage;
+const connectedKasirPage = connect(mapState, actionCreators)(KasirPage);
+export default connectedKasirPage;

@@ -66,39 +66,49 @@ class Category extends React.Component {
     super(props);
 
     this.state = {
-        fromCategory: {
             name: '',
-            category: '',
             backgroundColor: '',
-            deskripsi: ''
-        },
-        submitted: false
+            description: '',
+            image:null,
+            submitted: false
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChangeImage = this.handleChangeImage.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
 }
 
 handleChange(event) {
-  // const { name, value } = event.target;
+  const { name, value } = event.target;
   // const { user } = this.state;
-  // this.setState({
-  //     user: {
-  //         ...user,
-  //         [name]: value
-  //     }
-  // });
+  this.setState({
+          [name]: value
+  });
 }
-
+handleChangeImage(event){
+  this.setState({
+      image:event.target.files[0]
+    
+  });
+}
 handleSubmit(event) {
   event.preventDefault();
   this.setState({ submitted: true });
-  const { fromCategory } = this.state;
+  const { name ,description,backgroundColor} = this.state;
   const formData = new FormData();
-  formData.append('file',this.state.file);
-  // if (user.firstName && user.lastName && user.username && user.password) {
+  formData.append('image',this.state.image);
+  formData.append('name',this.state.name);
+  formData.append('description',this.state.description);
+  formData.append('backgroundColor',this.state.backgroundColor);
+  if (name && description && backgroundColor) {
       this.props.createCategory(formData);
-  // }
+  }
+}
+
+handleDelete(event){
+  event.preventDefault();
+  this.props.deleteCategory();
 }
   componentDidMount(){
     this.props.getCategorys();
@@ -107,7 +117,7 @@ handleSubmit(event) {
 
 
   handleChangeComplete = (color) => {
-    this.setState({ background: color.hex });
+    this.setState({ backgroundColor: color.hex });
   };
   render() {
     const {categorys} = this.props;
@@ -135,7 +145,8 @@ handleSubmit(event) {
                         <i className="ni ni-tag" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Name" type="text" />
+                    <Input placeholder="Name" type="text"  name="name"
+                    onChange={this.handleChange}/>
                   </InputGroup>
                 </FormGroup>
                 <FormGroup>
@@ -145,12 +156,13 @@ handleSubmit(event) {
                         <i className="ni ni-align-center" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Deskripsi" type="text"/>
+                    <Input placeholder="Deskripsi" type="text" name="description"
+                    onChange={this.handleChange}/>
                   </InputGroup>
                 </FormGroup>
                 <div className="mt-4 mb-4">
                 <SketchPicker
-                color={ this.state.background }
+                color={ this.state.backgroundColor }
                 onChangeComplete={ this.handleChangeComplete } />
                 </div>
                 
@@ -161,17 +173,17 @@ handleSubmit(event) {
                         <i className="ni ni-ui-04" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Color" type="text"
-                     value={this.state.background}
-                      
-                     onChange={this.handleFormChange}/>
+                    <Input placeholder="Color" type="text" name="backgroundColor"
+                     value={this.state.backgroundColor}
+                     onChange={this.handleChange}/>
                   </InputGroup>
                 </FormGroup>
                 
                 {/* <div class="custom-file"> */}
                 <FormGroup>
                 <Label for="uploadIcon">File</Label>
-                <Input type="file"  name="file" id="uploadIcon" />
+                <Input type="file"  name="image" id="uploadIcon"
+                onChange={this.handleChangeImage} />
                 <FormText color="muted">
                   Upload Icon
                 </FormText>
@@ -260,17 +272,13 @@ handleSubmit(event) {
                                 >
                                   Action
                                 </DropdownItem>
+              
                                 <DropdownItem
                                   href="#pablo"
-                                  onClick={e => e.preventDefault()}
+                                  value={item._id}
+                                  onClick={this.handleDelete}
                                 >
-                                  Another action
-                                </DropdownItem>
-                                <DropdownItem
-                                  href="#pablo"
-                                  onClick={e => e.preventDefault()}
-                                >
-                                  Something else here
+                                Hapus
                                 </DropdownItem>
                               </DropdownMenu>
                             </UncontrolledDropdown>
