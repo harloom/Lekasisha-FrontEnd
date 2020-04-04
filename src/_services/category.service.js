@@ -62,7 +62,7 @@ function deleteById(id){
   const requestOptions ={ 
     method: 'DELETE',
         headers:{ ...authHeader(), 'Content-Type': 'application/json' },
-        body: {}
+    
   }
   return fetch(`${getAPI()}/category/${id}`,requestOptions)
   .then(handleResponse)
