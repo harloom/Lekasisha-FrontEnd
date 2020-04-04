@@ -23,7 +23,7 @@ function create(fromData ){
   console.log(fromData);
   const requestOptions ={ 
     method: 'POST',
-        headers:{ ...authHeader(), 'Content-Type': 'multipart/form-data' },
+        headers:{ ...authHeader()},
         body: fromData
   }
   return fetch(`${getAPI()}/category/new`,requestOptions)

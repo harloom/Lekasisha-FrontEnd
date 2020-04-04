@@ -1,7 +1,7 @@
 // import config from 'config';
-import { authHeader } from '_helpers';
 
-const global = "https://lakeishaapp.herokuapp.com";
+import { authHeader ,getAPI} from '_helpers';
+// const getAPI() = "https://lakeishaapp.herokuapp.com";
 
 
 
@@ -16,14 +16,14 @@ export const userService = {
 };
 
 function login(username, password) {
-    console.log(global);
+    console.log(getAPI());
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' ,},
         body: JSON.stringify({ username:username, password: password })
     };
 
-    return fetch(`${global}/member/login`, requestOptions)
+    return fetch(`${getAPI()}/member/login`, requestOptions)
         .then(handleResponse)
         .then(user => {
         
@@ -46,7 +46,7 @@ function getAll() {
         headers: authHeader()
     };
 
-    return fetch(`${global}/users`, requestOptions).then(handleResponse);
+    return fetch(`${getAPI()}/users`, requestOptions).then(handleResponse);
 }
 
 function getById(id) {
@@ -55,7 +55,7 @@ function getById(id) {
         headers: authHeader()
     };
 
-    return fetch(`${global}/users/${id}`, requestOptions).then(handleResponse);
+    return fetch(`${getAPI()}/users/${id}`, requestOptions).then(handleResponse);
 }
 
 function register(user) {
@@ -65,7 +65,7 @@ function register(user) {
         body: JSON.stringify(user)
     };
 
-    return fetch(`${global}/users/register`, requestOptions).then(handleResponse);
+    return fetch(`${getAPI()}/users/register`, requestOptions).then(handleResponse);
 }
 
 function update(user) {
@@ -75,7 +75,7 @@ function update(user) {
         body: JSON.stringify(user)
     };
 
-    return fetch(`${global}/users/${user.id}`, requestOptions).then(handleResponse);;
+    return fetch(`${getAPI()}/users/${user.id}`, requestOptions).then(handleResponse);;
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
@@ -85,7 +85,7 @@ function _delete(id) {
         headers: authHeader()
     };
 
-    return fetch(`${global}/users/${id}`, requestOptions).then(handleResponse);
+    return fetch(`${getAPI()}/users/${id}`, requestOptions).then(handleResponse);
 }
 
 function handleResponse(response) {

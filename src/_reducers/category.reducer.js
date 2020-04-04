@@ -2,6 +2,38 @@ import { categoryConstants } from '../_constants';
 
 export function categorys(state = {}, action) {
   switch (action.type) {
+
+    case categoryConstants.CREATE_REQUEST:
+      return {
+        onRequest:true,
+        onSuccess : false,
+        items:state.items
+      }
+    
+    case categoryConstants.CREATE_FAILURE:
+      return {
+        onRequest : false,
+        onSuccess : false,
+        items:state.items
+      }
+
+    case categoryConstants.CREATE_SUCCESS:
+      return{
+        onRequest:false,
+        onSuccess : true,
+        // ...state,
+        items:state.items,
+        name: '',
+        backgroundColor: '',
+        description: '',
+        image:null,
+        submitted: false,
+        allValid: false
+      }  
+
+
+
+
     case categoryConstants.GETALL_REQUEST:
       return {
         loading: true

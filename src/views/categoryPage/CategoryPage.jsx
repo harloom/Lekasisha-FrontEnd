@@ -48,7 +48,8 @@ import {
   Table,
   Label,
   FormText,
-  UncontrolledTooltip
+  UncontrolledTooltip,
+  FormFeedback
 } from "reactstrap";
 
 
@@ -70,7 +71,8 @@ class Category extends React.Component {
             backgroundColor: '',
             description: '',
             image:null,
-            submitted: false
+            submitted: false,
+            allValid: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -78,7 +80,17 @@ class Category extends React.Component {
     this.handleChangeImage = this.handleChangeImage.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
 }
+componentDidMount(){
+  this.props.getCategorys();
+}
 
+componentDidUpdate(prevProprs,prevState,snapshot){
+  const {categorys } = this.props;
+  const {onRequest , onSuccess}  = categorys
+  if(onSuccess){
+    this.props.getCategorys();
+  }
+}
 handleChange(event) {
   const { name, value } = event.target;
   // const { user } = this.state;
@@ -92,8 +104,9 @@ handleChangeImage(event){
     
   });
 }
-handleSubmit(event) {
-  event.preventDefault();
+handleSubmit(e) {
+  e.preventDefault();
+  console.log("Button Submit");
   this.setState({ submitted: true });
   const { name ,description,backgroundColor} = this.state;
   const formData = new FormData();
@@ -102,7 +115,10 @@ handleSubmit(event) {
   formData.append('description',this.state.description);
   formData.append('backgroundColor',this.state.backgroundColor);
   if (name && description && backgroundColor) {
-      this.props.createCategory(formData);
+      this.setState({allValid:true});
+      this.props.submitCategory(formData);
+  }else{
+    this.setState({allValid:false});
   }
 }
 
@@ -110,9 +126,7 @@ handleDelete(event){
   event.preventDefault();
   this.props.deleteCategory();
 }
-  componentDidMount(){
-    this.props.getCategorys();
-  }
+
 
 
 
@@ -120,7 +134,11 @@ handleDelete(event){
     this.setState({ backgroundColor: color.hex });
   };
   render() {
-    const {categorys} = this.props;
+    const {categorys } = this.props;
+    const {name,backgroundColor,description,image,submitted ,allValid} = this.state;
+    const {onRequest , onSuccess}  = categorys
+    // console.log(this.props);
+    
     const { items}  = categorys;
 
     return (
@@ -129,15 +147,33 @@ handleDelete(event){
         {/* Page content */}
         <Container className=" mt--7" fluid>
           {/* Table */}
+        
+           {
+                 (submitted && !allValid) && 
+                 <div className="alert alert-danger" role="alert">
+                   "Tolong periska kembali form"
+                 </div>
+
+
+              }
+              {
+                onSuccess&& 
+                <div className="alert alert-success" role="alert">
+                  "Berhasil Ditambahkan"
+                </div>
+              }
+
+   
+          }
+
           <Row>
-            <div className="col">
+            <div className="col-12">
               <Card className=" shadow">
                 <CardHeader className=" bg-transparent">
                   <h3 className=" mb-0">Tambahkan Category</h3>
                 </CardHeader>
                 <CardBody>
-      
-                  <Form role="form" name="form" onSubmit={this.handleSubmit}>
+                  <Form  name="form" onSubmit={this.handleSubmit}>
                 <FormGroup>
                   <InputGroup className="input-group-alternative mb-3">
                     <InputGroupAddon addonType="prepend">
@@ -148,6 +184,10 @@ handleDelete(event){
                     <Input placeholder="Name" type="text"  name="name"
                     onChange={this.handleChange}/>
                   </InputGroup>
+                  {/* <FormFeedback invalid={"true"}>Masukan Nama Dengan Benar</FormFeedback> */}
+                  {/* {submitted && !name &&
+                            <FormFeedback invalid={(submitted && !name ? "true":"false")}>Masukan Nama Dengan Benar</FormFeedback>
+                        } */}
                 </FormGroup>
                 <FormGroup>
                   <InputGroup className="input-group-alternative mb-3">
@@ -190,9 +230,15 @@ handleDelete(event){
               </FormGroup>
                 {/* </div> */}
                 <div className="text-center">
-                  <Button className="mt-4" color="primary" type="button">
+                  <FormGroup>
+                  <Button className="mt-4" color="primary" type="submit">
                     Tambahkan Category
                   </Button>
+                  {
+                    onRequest &&
+                    <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                  }
+                    </FormGroup>
                 </div>
                 
               </Form>

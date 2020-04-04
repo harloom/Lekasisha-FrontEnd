@@ -92,6 +92,7 @@ handleChangeImage(event){
 
 handleSubmit(event) {
   event.preventDefault();
+  console.log("from Submit");
   this.setState({ submitted: true });
   const {dataFrom} = this.state;
   const formData = new FormData();
@@ -195,12 +196,13 @@ handleDelete(event){
                 </FormText>
               </FormGroup>
                 </div>
+                <FormGroup>
                 <div className="text-center">
-                  <Button className="mt-4" color="primary" type="button">
+                  <Button className="mt-4" color="primary" type="submit">
                     Tambahkan Paket
                   </Button>
                 </div>
-                
+                </FormGroup>
               </Form>
                 </CardBody>
               </Card>
