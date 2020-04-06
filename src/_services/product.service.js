@@ -18,7 +18,7 @@ function create(fromData ){
   console.log(fromData);
   const requestOptions ={ 
     method: 'POST',
-        headers:{ ...authHeader(), 'Content-Type': 'application/json' },
+        headers:{ ...authHeader()},
         body: fromData
   }
   return fetch(`${getAPI()}/product/new`,requestOptions)
@@ -50,16 +50,13 @@ function deleteById(id){
   // console.log(object);
   const requestOptions ={ 
     method: 'DELETE',
-        headers:{ ...authHeader(), 'Content-Type': 'application/json' },
-        body: {}
+        headers:{ ...authHeader() }
   }
-  return fetch(`${getAPI()}/${id}`,requestOptions)
+  return fetch(`${getAPI()}/product/${id}`,requestOptions)
   .then(handleResponse)
   .then(data=>{
     return data
-  }).catch(err=>{
-
-  });
+  })
 }
 
 function getAllPage(idCategory,page){

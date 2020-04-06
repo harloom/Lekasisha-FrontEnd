@@ -45,6 +45,10 @@ import {
   Table,
   Label,
   FormText,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
   UncontrolledTooltip
 } from "reactstrap";
 // core components
@@ -58,19 +62,23 @@ class ProductPage extends React.Component {
     this.state = {
           dataFrom: { 
             name: '',
-            id_category:'',
+            id_category:null,
             price: '',
             description: '',
             photos:null
           },
-        
-            submitted: false
+          allValid: false,
+          modalIsOpen:false,
+          modalDeletedOpen:false,
+          submitted: false
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleGetProduct = this.handleGetProduct.bind(this);
     this.handleChangeImage = this.handleChangeImage.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleDeleteAfterConfirm = this.handleDeleteAfterConfirm.bind(this);
 }
 
 handleChange(event) {
@@ -78,6 +86,7 @@ handleChange(event) {
   // const { user } = this.state;
   this.setState({
     dataFrom:{
+      ...this.state.dataFrom,
       [name]: value
     }     
   });
@@ -85,6 +94,7 @@ handleChange(event) {
 handleChangeImage(event){
   this.setState({
     dataFrom:{
+      ...this.state.dataFrom,
       photos:event.target.files[0]
     }
   });
@@ -96,20 +106,35 @@ handleSubmit(event) {
   this.setState({ submitted: true });
   const {dataFrom} = this.state;
   const formData = new FormData();
+  formData.append('id_category',dataFrom.id_category)
   formData.append('photos',dataFrom.photos);
   formData.append('name',dataFrom.name);
   formData.append('description',dataFrom.description);
   formData.append('price',dataFrom.price);
+  console.log(dataFrom);
   if (dataFrom.name && dataFrom.description && dataFrom.price && dataFrom.photos) {
+      console.log("validation Successful");
       this.props.submitProduct(formData);
   }
 }
 handleDelete(event){
   event.preventDefault();
-  this.props.deleteProducts()
+  const id = event.currentTarget.getAttribute('value');
+  this.setState({
+    objectIDdelete:id,
+    modalIsOpen :true
+  });
+
 }
 
-  componentDidMount(){
+handleDeleteAfterConfirm(){
+  this.setState({
+    modalIsOpen :false
+  });
+  this.props.deleteProducts(this.state.objectIDdelete);
+}
+
+componentDidMount(){
     this.props.getCategorys();
     this.props.getProducts();
     
@@ -117,7 +142,8 @@ handleDelete(event){
 
   handleGetProduct = (event) => {
     // console.log(event.target.value); 
-    const id = event.target.value 
+    const id = event.currentTarget.value ;
+    // console.log(id);
     this.props.getProducts(id,1);
     // this.setState({ value: event.target.value });
   };
@@ -125,7 +151,13 @@ handleDelete(event){
   render() {
     const {products,categorys} = this.props;
     // console.log(this.props);
+    const { allValid,modalIsOpen,modalDeletedOpen} = this.state;
     const {items}  = products;
+    // let docs = null;
+    // if(items?.docs != undefined){
+    //   docs = items.docs;
+    // }
+    // const {docs} = items.docs;
     console.log("Render Again");
     return (
       <>
@@ -142,8 +174,9 @@ handleDelete(event){
                 <CardBody>
                   <Form role="form"  onSubmit={this.handleSubmit}>
                   <FormGroup>
-                <Label for="categorysSelect">Pilih Category</Label>
+                <Label for="categorysSelect">Pilih Kategori</Label>
                 <Input onChange={this.handleChange} type="select" name="id_category" id="categorysSelect">
+                    <option>Pilih Kategori</option>
                   {
                     categorys.items&&categorys.items.map((item,index)=>
                       <option key={item._id} value={item._id} >{item.name}</option>
@@ -185,17 +218,15 @@ handleDelete(event){
                     onChange={this.handleChange}/>
                   </InputGroup>
                 </FormGroup>
-                
-                <div class="custom-file ">
                 <FormGroup>
-                <Label for="uploadIcon">Photos</Label>
-                <Input type="file"  name="photos" id="uploadIcon"
-                 onChange={this.handleChangeImage} />
-                <FormText color="muted">
-                  Upload Photo
+                      <Label for="uploadIcon">File</Label>
+                      <Input type="file" name="image" id="uploadIcon"
+                        onChange={this.handleChangeImage} />
+                      <FormText color="muted">
+                        Upload Icon
                 </FormText>
-              </FormGroup>
-                </div>
+                    </FormGroup>
+               
                 <FormGroup>
                 <div className="text-center">
                   <Button className="mt-4" color="primary" type="submit">
@@ -248,7 +279,7 @@ handleDelete(event){
                   <tbody>
                   {       
                       items&&
-                      items.docs.map((item,index)=>
+                      items.docs?.map((item,index)=>
                           <tr  key={index}>
                           <th scope="row">
                           
@@ -287,16 +318,7 @@ handleDelete(event){
                               )
                             }
 
-                              {
-                                item.imagePath.map((value,index)=>
-                              <UncontrolledTooltip             
-                                delay={0}
-                                target={value._id}
-                              >
-                                {index+1}
-                              </UncontrolledTooltip>
-                              )
-                              }
+                    
 
                         </div>
                           </td>
@@ -324,7 +346,9 @@ handleDelete(event){
                                 </DropdownItem>
                                 <DropdownItem
                                   href="#pablo"
+                                  value={item._id}
                                   onClick={this.handleDelete}
+                                  
                                 >
                                   Hapus
                                 </DropdownItem>
@@ -393,7 +417,24 @@ handleDelete(event){
                 </CardFooter>
               </Card>
             </div>
-                  
+            
+            {/* ,modal */}
+            <Modal  isOpen={modalIsOpen} fade={true}>
+                <ModalHeader>
+                    Ingin Menghapus?
+                </ModalHeader>
+                <ModalBody>
+                  <p>Data tidak dapat di kembalikan!</p>
+                </ModalBody>
+                <ModalFooter>
+                <Button onClick={()=> this.setState({modalIsOpen:false})}>
+                Close
+                  </Button>
+                  <Button color="info" onClick={this.handleDeleteAfterConfirm}>
+                        Save Change
+                  </Button>
+                </ModalFooter>   
+                </Modal>
           </Row>
 
         </Container>
@@ -409,7 +450,7 @@ function mapState(state) {
 }
 const actionCreators = {
   getProducts: productActions.getAll,
-  deleteProducts: productActions._delete,
+  deleteProducts: productActions.deleteById,
   getCategorys : categoryActions.getAll,
   submitProduct : productActions.createproduct
 

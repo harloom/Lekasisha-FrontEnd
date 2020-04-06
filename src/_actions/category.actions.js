@@ -5,7 +5,7 @@ import { history } from '../_helpers';
 
 export const categoryActions = {
     createCategory,
-    editCategory,
+    editCategory ,
     getAll,
     deleteById: deleteById,
     putPitchure: _putPitchure
@@ -45,9 +45,9 @@ function editCategory(id,object) {
         */
         categoryService.update(id,object)
             .then(
-              category => { 
+              response => { 
                     dispatch(success());
-                    // history.push('/auth');
+                    console.log(response);
                     dispatch(alertActions.success('Edit Data successful'));
                 },
                 error => {
@@ -57,8 +57,8 @@ function editCategory(id,object) {
             );
     };
 
-    function request(category) { return { type: categoryConstants.EDIT_REQUEST, category } }
-    function success(category) { return { type: categoryConstants.EDIT_SUCCESS, category } }
+    function request(id) { return { type: categoryConstants.EDIT_REQUEST, id } }
+    function success(message) { return { type: categoryConstants.EDIT_SUCCESS, message } }
     function failure(error) { return { type: categoryConstants.EDIT_FAILURE, error } }
 }
 

@@ -7,7 +7,7 @@ export const productActions = {
     createproduct,
     editproduct,
     getAll,
-    delete: _delete,
+    deleteById: _delete,
     putPitchure: _putPitchure
 };
 
@@ -64,8 +64,9 @@ function editproduct(id,object) {
 
 function getAll(idCategory,page) {
     return dispatch => {
-        dispatch(request(idCategory, page));
-
+        dispatch(request(idCategory));
+        console.log(idCategory);
+        console.log(page);
         productService.getAllPage(idCategory,page)
             .then(
                 products => dispatch(success(products)),
@@ -73,7 +74,7 @@ function getAll(idCategory,page) {
             );
     };
 
-    function request(idCategory,page) { return { type: productConstants.GETALL_REQUEST ,idCategory} }
+    function request(idCategory) { return { type: productConstants.GETALL_REQUEST ,idCategory} }
     function success(products) { return { type: productConstants.GETALL_SUCCESS, products } }
     function failure(error) { return { type: productConstants.GETALL_FAILURE, error } }
 }
@@ -82,11 +83,17 @@ function getAll(idCategory,page) {
 function _delete(id) {
     return dispatch => {
         dispatch(request(id));
-
+        console.log(`deleted ${id}`)
         productService.deleteById(id)
             .then(
-                id => dispatch(success(id)),
-                error => dispatch(failure(id, error.toString()))
+                response => {
+                    console.log("response");
+                    dispatch(success(id));
+                },
+              
+                error => {
+                    console.log("error");
+                    dispatch(failure(id, error.toString()))}
             );
     };
 

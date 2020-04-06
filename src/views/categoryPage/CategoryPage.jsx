@@ -69,23 +69,32 @@ class Category extends React.Component {
 
   constructor(props) {
     super(props);
-  
+
     this.state = {
       name: '',
       backgroundColor: '',
       description: '',
       image: null,
       submitted: false,
+      editSumbitted: false,
       allValid: false,
-      modalIsOpen:false,
-      objectIDdelete:'',
+      modalIsOpen: false,
+      modalDeletedOpen: false,
+      modalEditOpen :false,
+      objectIDdelete: '',
+      objectEdit:{},
+      objectDetail: {}
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangeEditFrom = this.handleChangeEditFrom.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSumbitEdit = this.handleSumbitEdit.bind(this);
     this.handleChangeImage = this.handleChangeImage.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleDeleteAfterConfirm = this.handleDeleteAfterConfirm.bind(this);
+    this.handleDetail = this.handleDetail.bind(this);
   }
   componentDidMount() {
     this.props.getCategorys();
@@ -93,12 +102,21 @@ class Category extends React.Component {
 
   componentDidUpdate(prevProprs, prevState, snapshot) {
     const { categorys } = this.props;
-    const { onRequest, onSuccess } = categorys
+    const { onRequest, onSuccess ,onSuccessEdit } = categorys
     if (onSuccess) {
       setTimeout(() => {
         this.props.getCategorys();
       }, 3000);
 
+    }
+    if(onSuccessEdit){
+      setTimeout(()=>{
+        this.setState({
+          modalEditOpen: false,
+          onSuccessEdit:false,
+        });
+        this.props.getCategorys();
+      },2000);
     }
   }
   handleChange(event) {
@@ -108,6 +126,18 @@ class Category extends React.Component {
       [name]: value
     });
   }
+  handleChangeEditFrom(event){
+    const {name ,value} = event.target;
+
+    this.setState({
+      objectEdit :{
+        ...this.state.objectEdit,
+        [name] : value 
+      }
+    });
+  }
+
+
   handleChangeImage(event) {
     this.setState({
       image: event.target.files[0]
@@ -115,6 +145,21 @@ class Category extends React.Component {
     });
   }
 
+  handleSumbitEdit(e){
+    e.preventDefault();
+    this.setState({
+      editSumbitted : true
+    });
+    let object = this.state.objectEdit;
+    const id = object._id
+    delete object.imagePath;
+    delete object._id;
+    delete object.createdAt;
+    delete object.updatedAt;
+    this.props.editCategory(id,object)
+
+
+  }
 
   handleSubmit(e) {
     e.preventDefault();
@@ -134,19 +179,42 @@ class Category extends React.Component {
     }
   }
 
+  handleDetail(event) {
+    event.preventDefault();
+    const index = event.currentTarget.getAttribute('value');
+    // console.log();
+    const { items } = this.props.categorys;
+    // console.log(items)
+    this.setState({
+      objectDetail: items[index],
+      modalDeletedOpen: true
+    })
+  }
+
+  handleEdit(event){
+    event.preventDefault();
+    const index = event.currentTarget.getAttribute('value');
+    // console.log();
+    const { items } = this.props.categorys;
+    this.setState({
+      objectEdit : items[index],
+      modalEditOpen :true
+    })
+  }
+
   handleDelete(event) {
     event.preventDefault();
     const id = event.currentTarget.getAttribute('value');
     this.setState({
-      objectIDdelete:id,
-      modalIsOpen :true
+      objectIDdelete: id,
+      modalIsOpen: true
     });
-    
+
   }
 
-  handleDeleteAfterConfirm(){
+  handleDeleteAfterConfirm() {
     this.setState({
-      modalIsOpen :false
+      modalIsOpen: false
     });
     this.props.deleteCategory(this.state.objectIDdelete);
   }
@@ -154,40 +222,42 @@ class Category extends React.Component {
   handleChangeComplete = (color) => {
     this.setState({ backgroundColor: color.hex });
   };
+
+  handleChangeEditColor = (color)=>{
+    this.setState({
+      objectEdit :{
+        ...this.state.objectEdit,
+        backgroundColor : color.hex 
+      }
+
+    });
+  }
+
+
   render() {
     const { categorys } = this.props;
-    const { name, backgroundColor, description, image, submitted, allValid,modalIsOpen } = this.state;
-    const { onRequest, onSuccess } = categorys
-    // console.log(this.props);
+    const { name, backgroundColor, description, image,
+      submitted, allValid, modalIsOpen, modalDeletedOpen,
+      modalEditOpen,
+      objectDetail ,objectEdit} = this.state;
+    const { onRequest, onSuccess ,onRequestEdit,onSuccessEdit} = categorys
+    // console.log(objectDetail.item);
 
     const { items } = categorys;
 
     return (
       <>
-        <FromHeader />
+<FromHeader />
         {/* Page content */}
         <Container className=" mt--7" fluid>
-          {/* Table */}
-
-          {
-            (submitted && !allValid) &&
-            <div className="alert alert-danger" role="alert">
-              "Tolong periska kembali form"
-                 </div>
+  
 
 
-          }
-          {
-            onSuccess &&
-            <div className="alert alert-success" role="alert">
-              "Berhasil Ditambahkan"
-                </div>
-          }
 
-
-          }
+          
 
           <Row>
+       
             <div className="col-12">
               <Card className=" shadow">
                 <CardHeader className=" bg-transparent">
@@ -250,6 +320,22 @@ class Category extends React.Component {
                 </FormText>
                     </FormGroup>
                     {/* </div> */}
+
+                    {
+            (submitted && !allValid) &&
+            <div className="alert alert-danger" role="alert">
+              "Tolong periska kembali form"
+                 </div>
+
+
+          }
+          {
+            onSuccess &&
+            <div className="alert alert-success" role="alert">
+              "Berhasil Ditambahkan"
+                </div>
+          }
+
                     <div className="text-center">
                       <FormGroup>
                         <Button className="mt-4" color="primary" type="submit">
@@ -266,7 +352,8 @@ class Category extends React.Component {
                 </CardBody>
               </Card>
             </div>
-
+            
+            {/* table */}
             <div className="col mt-4">
               <Card className="shadow">
                 <CardHeader className="border-0">
@@ -335,16 +422,24 @@ class Category extends React.Component {
                               <DropdownMenu className="dropdown-menu-arrow" right>
                                 <DropdownItem
                                   href="#pablo"
-                                  onClick={e => e.preventDefault()}
+                                  value={index}
+                                  onClick={this.handleDetail}
                                 >
-                                  Action
+                                  Detail
                                 </DropdownItem>
+                                <DropdownItem
+                                  href="#pablo"
+                                  value={index}
+                                  onClick={this.handleEdit}
 
+                                >
+                                  Edit
+                                </DropdownItem>
                                 <DropdownItem
                                   href="#pablo"
                                   value={item._id}
                                   onClick={this.handleDelete}
-                                  
+
                                 >
                                   Hapus
                                 </DropdownItem>
@@ -417,28 +512,137 @@ class Category extends React.Component {
                 </CardFooter>
               </Card>
             </div>
-  
 
 
-               <Modal  isOpen={modalIsOpen} fade={true}>
-                <ModalHeader>
-                    Ingin Menghapus?
+
+            <Modal isOpen={modalIsOpen} fade={true}>
+              <ModalHeader>
+                Ingin Menghapus?
                 </ModalHeader>
-                <ModalBody>
-                  <p>Data tidak dapat di kembalikan!</p>
-                </ModalBody>
-                <ModalFooter>
-                <Button onClick={()=> this.setState({modalIsOpen:false})}>
-                Close
+              <ModalBody>
+                <p>Data tidak dapat di kembalikan!</p>
+              </ModalBody>
+              <ModalFooter>
+                <Button onClick={() => this.setState({ modalIsOpen: false })}>
+                  Close
                   </Button>
-                  <Button color="info" onClick={this.handleDeleteAfterConfirm}>
-                        Save Change
+                <Button color="info" onClick={this.handleDeleteAfterConfirm}>
+                  Save Change
                   </Button>
-                </ModalFooter>
-               
-              </Modal>
+              </ModalFooter>
 
-      
+            </Modal>
+            <Modal isOpen={modalDeletedOpen} fade={true}>
+              <ModalHeader>
+                Detail
+                </ModalHeader>
+              <ModalBody>
+                    
+                <p>ID : {objectDetail._id}</p>
+                <p>Name : {objectDetail.name}</p>
+
+              </ModalBody>
+              <ModalFooter>
+                <Button onClick={() => this.setState({ modalDeletedOpen: false })}>
+                  OK
+                  </Button>
+
+              </ModalFooter>
+
+            </Modal>
+                      {/* Modal Edit */}
+            <Modal isOpen={modalEditOpen} size="lg" >
+              <ModalHeader>
+                Edit
+                </ModalHeader>
+              <ModalBody>
+                <Form name="form" onSubmit={this.handleSumbitEdit}>
+                  <FormGroup>
+                    <InputGroup className="input-group-alternative mb-3">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="ni ni-tag" />
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input placeholder="Name" type="text" name="name"
+                
+                      value={objectEdit.name}
+                      onChange={this.handleChangeEditFrom}
+                      />
+                    </InputGroup>
+                    {/* <FormFeedback invalid={"true"}>Masukan Nama Dengan Benar</FormFeedback> */}
+                    {/* {submitted && !name &&
+                            <FormFeedback invalid={(submitted && !name ? "true":"false")}>Masukan Nama Dengan Benar</FormFeedback>
+                        } */}
+                  </FormGroup>
+                  <FormGroup>
+                    <InputGroup className="input-group-alternative mb-3">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="ni ni-align-center" />
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input placeholder="Deskripsi" type="text" name="description"
+                       value={objectEdit.description}
+                       onChange={this.handleChangeEditFrom}
+                      />
+                    </InputGroup>
+                  </FormGroup>
+                  <div className="mt-4 mb-4">
+                    <SketchPicker
+                    color={objectEdit.backgroundColor}
+                    onChangeComplete={this.handleChangeEditColor}
+                    />
+                  </div>
+
+                  <FormGroup>
+                    <InputGroup className="input-group-alternative">
+                       <InputGroupAddon addonType="prepend">
+                         <InputGroupText>
+                          <i className="ni ni-ui-04" />
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input placeholder="Color" type="text" name="backgroundColor"
+                       value={objectEdit.backgroundColor}
+                       onChange={this.handleChangeEditFrom}
+                      />
+                    </InputGroup>
+                  </FormGroup>
+                  {
+            onSuccessEdit &&
+            <div className="alert alert-success" role="alert">
+              "Berhasil di Edit"
+                </div>
+          }
+                    
+                  {/* </div> */}
+                  <div className="text-center">
+                    <FormGroup>
+                      <Button className="mt-4" color="primary" type="submit">
+                        Edit
+                  </Button>
+                      {
+                        onRequestEdit &&
+                        <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                      }
+                    </FormGroup>
+                  </div>
+
+                </Form>
+
+              </ModalBody>
+              <ModalFooter>
+                <Button onClick={() => this.setState({ modalEditOpen: false,
+                  onSuccessEdit:false,
+                })}>
+                  Close
+                </Button>
+
+              </ModalFooter>
+            </Modal>
+
+            {/* Modal Edit */}
+
           </Row>
         </Container>
       </>
@@ -454,6 +658,7 @@ function mapState(state) {
 const actionCreators = {
   getCategorys: categoryActions.getAll,
   deleteCategory: categoryActions.deleteById,
+  editCategory : categoryActions.editCategory,
   submitCategory: categoryActions.createCategory
 }
 

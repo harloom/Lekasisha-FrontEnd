@@ -31,7 +31,28 @@ export function categorys(state = {}, action) {
         allValid: false
       }  
 
-
+      case categoryConstants.EDIT_REQUEST:
+        return {
+          onRequestEdit:true,
+          onSuccessEdit : false,
+          items:state.items
+        }
+      
+      case categoryConstants.EDIT_FAILURE:
+        return {
+          onRequestEdit : false,
+          onSuccessEdit : false,
+          items:state.items
+        }
+  
+      case categoryConstants.EDIT_SUCCESS:
+        return{
+          onRequestEdit:false,
+          onSuccessEdit : true,
+          // ...state,
+          items:state.items,
+        }  
+  
 
 
     case categoryConstants.GETALL_REQUEST:

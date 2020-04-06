@@ -47,7 +47,7 @@ var routes = [
   },
   {
     path: "/category",
-    name: "Category",
+    name: "Kategori",
     icon: "ni ni-collection text-yellow",
     component: Category,
     layout: "/admin"
