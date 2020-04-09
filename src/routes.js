@@ -20,6 +20,7 @@ import Profile from "views/examples/Profile.js";
 import Maps from "views/examples/Maps.js";
 import Product from "views/productPage/ProductPage"
 import {Category} from "views/categoryPage/CategoryPage"
+import {KasirPage} from "views/kasirPage/KasirPage"
 import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
 
@@ -35,7 +36,7 @@ var routes = [
     path: "/transaksi",
     name: "Kasir",
     icon: "ni ni-cart text-dark",
-    component: Product,
+    component: KasirPage,
     layout: "/admin"
   },
   {
@@ -59,13 +60,7 @@ var routes = [
     component: Icons,
     layout: "/admin"
   },
-  {
-    path: "/maps",
-    name: "Maps",
-    icon: "ni ni-pin-3 text-orange",
-    component: Maps,
-    layout: "/admin"
-  },
+
   {
     path: "/user-profile",
     name: "User Profile",

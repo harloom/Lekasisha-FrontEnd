@@ -10,8 +10,22 @@ export const productService = {
   update,
   deleteById,
   getAllPage,
-  detail
+  detail,
+  infomation
 };
+
+function infomation(){
+  const requestOptions ={
+    method : 'GET',
+    headers:{ ...authHeader()}
+  }
+
+  return fetch(`${getAPI()}/product/info`,requestOptions)
+  .then(handleResponse)
+  .then(data =>{
+    return data;
+  });
+}
 
 function create(fromData ){
   //passing from Data
@@ -25,12 +39,10 @@ function create(fromData ){
   .then(handleResponse)
   .then(data=>{
     return data
-  }).catch(err=>{
-
   });
 }
 
-function update({id,object}){
+function update(id,object){
   console.log(object);
   const requestOptions ={ 
     method: 'PATCH',
@@ -41,9 +53,7 @@ function update({id,object}){
   .then(handleResponse)
   .then(data=>{
     return data
-  }).catch(err=>{
-
-  });
+  })
 }
 
 function deleteById(id){
