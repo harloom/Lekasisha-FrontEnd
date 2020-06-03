@@ -1,23 +1,23 @@
-import { categoryConstants } from '../_constants';
+import { bannerConstants } from '../_constants';
 
-export function categorys(state = {}, action) {
+export function banners(state = {}, action) {
   switch (action.type) {
 
-    case categoryConstants.CREATE_REQUEST:
+    case bannerConstants.CREATE_REQUEST:
       return {
         onRequest:true,
         onSuccess : false,
         items:state.items
       }
     
-    case categoryConstants.CREATE_FAILURE:
+    case bannerConstants.CREATE_FAILURE:
       return {
         onRequest : false,
         onSuccess : false,
         items:state.items
       }
 
-    case categoryConstants.CREATE_SUCCESS:
+    case bannerConstants.CREATE_SUCCESS:
       return{
         onRequest:false,
         onSuccess : true,
@@ -25,27 +25,26 @@ export function categorys(state = {}, action) {
         items:state.items,
         name: '',
         backgroundColor: '',
-        description: '',
         image:null,
         submitted: false,
         allValid: false
       }  
 
-      case categoryConstants.EDIT_REQUEST:
+      case bannerConstants.EDIT_REQUEST:
         return {
           onRequestEdit:true,
           onSuccessEdit : false,
           items:state.items
         }
       
-      case categoryConstants.EDIT_FAILURE:
+      case bannerConstants.EDIT_FAILURE:
         return {
           onRequestEdit : false,
           onSuccessEdit : false,
           items:state.items
         }
   
-      case categoryConstants.EDIT_SUCCESS:
+      case bannerConstants.EDIT_SUCCESS:
         return{
           onRequestEdit:false,
           onSuccessEdit : true,
@@ -55,19 +54,19 @@ export function categorys(state = {}, action) {
   
 
 
-    case categoryConstants.GETALL_REQUEST:
+    case bannerConstants.GETALL_REQUEST:
       return {
         loading: true
       };
-    case categoryConstants.GETALL_SUCCESS:
+    case bannerConstants.GETALL_SUCCESS:
       return {
-        items: action.categorys
+        items: action.banners
       };
-    case categoryConstants.GETALL_FAILURE:
+    case bannerConstants.GETALL_FAILURE:
       return { 
         error: action.error
       };
-    case categoryConstants.DELETE_REQUEST:
+    case bannerConstants.DELETE_REQUEST:
       // add 'deleting:true' property to user being deleted
       return {
         ...state,
@@ -77,12 +76,12 @@ export function categorys(state = {}, action) {
             : item
         )
       };
-    case categoryConstants.DELETE_SUCCESS:
+    case bannerConstants.DELETE_SUCCESS:
       // remove deleted user from state
       return {
         items: state.items.filter(item => item._id !== action.id)
       };
-    case categoryConstants.DELETE_FAILURE:
+    case bannerConstants.DELETE_FAILURE:
       // remove 'deleting:true' property and add 'deleteError:[error]' property to user 
       return {
         ...state,

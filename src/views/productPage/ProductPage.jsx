@@ -383,7 +383,7 @@ class ProductPage extends React.Component {
                           <td>
                             <Badge color="" className="badge-dot mr-4">
                               <i className="bg-warning" />
-                              {item.description}
+                              {item.description.slice(0,30)+'..'}
                             </Badge>
                           </td>
                           <td>

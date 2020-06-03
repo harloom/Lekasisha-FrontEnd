@@ -24,7 +24,7 @@ class App extends React.Component {
         const { alert } = this.props;
         return (
             <Router history={history}>
-                {console.log(history)}
+                {/* {console.log(history)} */}
             <Switch>
             <PrivateRoute exact path="/" component={AdminLayout} />
             <Route path="/admin/" render={props => <AdminLayout {...props} />} />

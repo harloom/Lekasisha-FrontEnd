@@ -21,6 +21,8 @@ import Maps from "views/examples/Maps.js";
 import Product from "views/productPage/ProductPage"
 import {Category} from "views/categoryPage/CategoryPage"
 import {KasirPage} from "views/kasirPage/KasirPage"
+import {BannerPage} from "views/bannerManagement/BannerPage"
+import StoreSettings from "views/storeSettings/StoreSettins"
 import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
 
@@ -54,6 +56,21 @@ var routes = [
     layout: "/admin"
   },
   {
+    path: "/banner",
+    name: "Banner Manajemen",
+    icon: "ni ni-bulb-61 text-primary",
+    component: BannerPage,
+    layout: "/admin"
+  },
+  {
+    path: "/settings",
+    name: "Store Settings",
+    icon: "ni ni-settings text-red",
+    component: StoreSettings,
+    layout: "/admin"
+  },
+  
+  {
     path: "/icons",
     name: "Icons",
     icon: "ni ni-planet text-blue",
@@ -61,20 +78,20 @@ var routes = [
     layout: "/admin"
   },
 
-  {
-    path: "/user-profile",
-    name: "User Profile",
-    icon: "ni ni-single-02 text-yellow",
-    component: Profile,
-    layout: "/admin"
-  },
-  {
-    path: "/tables",
-    name: "Tables",
-    icon: "ni ni-bullet-list-67 text-red",
-    component: Tables,
-    layout: "/admin"
-  },
+  // {
+  //   path: "/user-profile",
+  //   name: "User Profile",
+  //   icon: "ni ni-single-02 text-yellow",
+  //   component: Profile,
+  //   layout: "/admin"
+  // },
+  // {
+  //   path: "/tables",
+  //   name: "Tables",
+  //   icon: "ni ni-bullet-list-67 text-red",
+  //   component: Tables,
+  //   layout: "/admin"
+  // },
   // {
   //   path: "/login",
   //   name: "LoginPage",

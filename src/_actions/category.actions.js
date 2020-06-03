@@ -47,7 +47,7 @@ function editCategory(id,object) {
             .then(
               response => { 
                     dispatch(success());
-                    console.log(response);
+                    // console.log(response);
                     dispatch(alertActions.success('Edit Data successful'));
                 },
                 error => {

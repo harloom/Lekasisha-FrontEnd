@@ -16,7 +16,7 @@ export const userService = {
 };
 
 function login(username, password) {
-    console.log(getAPI());
+    // console.log(getAPI());
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' ,},
@@ -30,7 +30,7 @@ function login(username, password) {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             localStorage.setItem('user', JSON.stringify(user));
             var a = localStorage.getItem('user');
-            console.log(a);
+            // console.log(a);
             return user;
         });
 }

@@ -77,8 +77,8 @@ function editproduct(id,object) {
 function getAll(idCategory,page) {
     return dispatch => {
         dispatch(request(idCategory));
-        console.log(idCategory);
-        console.log(page);
+        // console.log(idCategory);
+        // console.log(page);
         productService.getAllPage(idCategory,page)
             .then(
                 products => dispatch(success(products)),
@@ -95,16 +95,16 @@ function getAll(idCategory,page) {
 function _delete(id) {
     return dispatch => {
         dispatch(request(id));
-        console.log(`deleted ${id}`)
+        // console.log(`deleted ${id}`)
         productService.deleteById(id)
             .then(
                 response => {
-                    console.log("response");
+                    // console.log("response");
                     dispatch(success(id));
                 },
               
                 error => {
-                    console.log("error");
+                    // console.log("error");
                     dispatch(failure(id, error.toString()))}
             );
     };
