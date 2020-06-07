@@ -54,7 +54,7 @@ import {
 // core components
 import HeaderProduct from "components/Headers/HeaderProduct.js";
 import { productActions, categoryActions } from '_actions/index';
-
+import { authHeader ,getAPI} from '_helpers';
 class ProductPage extends React.Component {
   constructor(props) {
     super(props);
@@ -74,7 +74,7 @@ class ProductPage extends React.Component {
         edit: false,
         detail: false
       },
-
+      id_category :'',
       allValid: false,
       modalIsOpen: false,
       modalDeletedOpen: false,
@@ -92,11 +92,15 @@ class ProductPage extends React.Component {
     this.handleEdit = this.handleEdit.bind(this);
     this.handleChangeEdit = this.handleChangeEdit.bind(this);
     this.handleSumbitEdit = this.handleSumbitEdit.bind(this);
-
+    this.handlePage = this.handlePage.bind(this);
     this.handleDissmisModal = this.handleDissmisModal.bind(this);
   }
 
+  handlePage = (event) => {
+    const page = event.currentTarget.value;
+    this.props.getProducts(this.state.id_category,page);
 
+  };
   handleDissmisModal(event) {
     event.preventDefault();
     this.setState({
@@ -222,9 +226,22 @@ class ProductPage extends React.Component {
     // console.log(event.target.value); 
     const id = event.currentTarget.value;
     // console.log(id);
+    this.setState({
+      id_category : id
+    });
     this.props.getProducts(id, 1);
     // this.setState({ value: event.target.value });
   };
+
+  createSelectionPage = () => {
+    let selectionPage = []
+    // Outer loop to create parent
+    for (let i = 0; i < this.props.products.items.totalPages; i++) {
+      //Create the parent and add the children
+      selectionPage.push(<option key={i} value={(i + 1)} >{(i + 1)}</option>)
+    }
+    return selectionPage
+  }
 
   render() {
     const { products, categorys } = this.props;
@@ -390,20 +407,21 @@ class ProductPage extends React.Component {
                             <div className="avatar-group">
                               {
                                 item.imagePath.map((value, index) =>
+                              
                                   <a
                                     key={index}
                                     className="avatar avatar-sm"
                                     href="#pablo"
-                                    id={value._id}
+                                    id={value}
                                     onClick={e => e.preventDefault()}
                                   >
                                     <img
                                       alt="..."
                                       className="rounded-circle"
-                                      src={require("assets/img/theme/team-1-800x800.jpg")}
+                                      src={`${getAPI()}/images/${value}`}
                                     />
                                   </a>
-
+                                  
                                 )
                               }
 
@@ -465,56 +483,18 @@ class ProductPage extends React.Component {
                   </tbody>
                 </Table>
                 <CardFooter className="py-4">
-                  <nav aria-label="...">
-                    <Pagination
-                      className="pagination justify-content-end mb-0"
-                      listClassName="justify-content-end mb-0"
-                    >
-                      <PaginationItem className="disabled">
-                        <PaginationLink
-                          href="#pablo"
-                          onClick={e => e.preventDefault()}
-                          tabIndex="-1"
-                        >
-                          <i className="fas fa-angle-left" />
-                          <span className="sr-only">Previous</span>
-                        </PaginationLink>
-                      </PaginationItem>
-                      <PaginationItem className="active">
-                        <PaginationLink
-                          href="#pablo"
-                          onClick={e => e.preventDefault()}
-                        >
-                          1
-                        </PaginationLink>
-                      </PaginationItem>
-                      <PaginationItem>
-                        <PaginationLink
-                          href="#pablo"
-                          onClick={e => e.preventDefault()}
-                        >
-                          2 <span className="sr-only">(current)</span>
-                        </PaginationLink>
-                      </PaginationItem>
-                      <PaginationItem>
-                        <PaginationLink
-                          href="#pablo"
-                          onClick={e => e.preventDefault()}
-                        >
-                          3
-                        </PaginationLink>
-                      </PaginationItem>
-                      <PaginationItem>
-                        <PaginationLink
-                          href="#pablo"
-                          onClick={e => e.preventDefault()}
-                        >
-                          <i className="fas fa-angle-right" />
-                          <span className="sr-only">Next</span>
-                        </PaginationLink>
-                      </PaginationItem>
-                    </Pagination>
-                  </nav>
+                <div className="col-3">
+
+            <Input onChange={this.handlePage} type="select" name="select" id="pageSelect">
+              <option key='' value=''>Page</option>
+              {
+                items &&
+                this.createSelectionPage()
+
+              }
+            </Input>
+
+            </div>
                 </CardFooter>
               </Card>
             </div>

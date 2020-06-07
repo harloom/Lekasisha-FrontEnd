@@ -13,8 +13,8 @@ const composeEnhancers =
 
 const enhancer = composeEnhancers(
     applyMiddleware(
-        thunkMiddleware,
-        loggerMiddleware
+        thunkMiddleware
+        // loggerMiddleware
     )
 );
 export const store = createStore(

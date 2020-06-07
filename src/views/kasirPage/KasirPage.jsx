@@ -384,7 +384,7 @@ class KasirPage extends React.Component {
                     <tr>
                       <th scope="col">No</th>
                       <th scope="col">Nama Pemesan</th>
-                      <th scope="col">Nama Acara</th>
+                      <th scope="col">Pembayaran</th>
                       <th scope="col">Status Transaksi</th>
                       <th scope="col">Status Pembayaran</th>
                       <th scope="col">Tanggal Acara</th>
@@ -410,7 +410,7 @@ class KasirPage extends React.Component {
                             </Media>
                           </th>
                           <td>{item.user_detail.id_user.nameUser}</td>
-                          <td>{item.event_detail.name_event}</td>
+                          <td>{item.payment_type}</td>
                           <td>
                             <Badge color="" className="badge-dot mr-4">
                               <i className="bg-warning" />
@@ -460,7 +460,7 @@ class KasirPage extends React.Component {
                                 </DropdownItem>
                                 <DropdownItem
                                   href="#pablo"
-                                  value={item._id}
+                                  value={index}
                                   name="ongoing"
                                   onClick={this.handleButtonAction}
                                 >

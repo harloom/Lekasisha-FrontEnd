@@ -37,21 +37,21 @@ var routes = [
   {
     path: "/transaksi",
     name: "Kasir",
-    icon: "ni ni-cart text-dark",
+    icon: "ni ni-cart text-primary",
     component: KasirPage,
     layout: "/admin"
   },
   {
     path: "/product",
     name: "Tambahkan Paket",
-    icon: "ni ni-bag-17 text-red",
+    icon: "ni ni-bag-17 text-primary",
     component: Product,
     layout: "/admin"
   },
   {
     path: "/category",
     name: "Kategori",
-    icon: "ni ni-collection text-yellow",
+    icon: "ni ni-collection text-primary",
     component: Category,
     layout: "/admin"
   },
@@ -65,18 +65,18 @@ var routes = [
   {
     path: "/settings",
     name: "Store Settings",
-    icon: "ni ni-settings text-red",
+    icon: "ni ni-settings text-primary",
     component: StoreSettings,
     layout: "/admin"
   },
   
-  {
-    path: "/icons",
-    name: "Icons",
-    icon: "ni ni-planet text-blue",
-    component: Icons,
-    layout: "/admin"
-  },
+  // {
+  //   path: "/icons",
+  //   name: "Icons",
+  //   icon: "ni ni-planet text-blue",
+  //   component: Icons,
+  //   layout: "/admin"
+  // },
 
   // {
   //   path: "/user-profile",
