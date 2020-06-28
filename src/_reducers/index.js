@@ -8,6 +8,7 @@ import  {categorys} from './category.reducer';
 import {products} from './products.reducer';
 import {banners} from './banner.reducer';
 import {orders} from './orders.reducer';
+import {laporan} from './laporan.reducer'
 
 const rootReducer = combineReducers({
   authentication,
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   products,
   banners,
   orders,
+  laporan
 });
 
 export default rootReducer;

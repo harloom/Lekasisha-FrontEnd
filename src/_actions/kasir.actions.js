@@ -8,7 +8,8 @@ export const  kasirActions ={
   ongoingOrder,
   denyOrder,
   cancelOrder,
-  finishOrder
+  finishOrder,
+  paymentOrder,
 }
 
 
@@ -51,10 +52,41 @@ const actionOrderKey = {
   complate: "complate",
   ongoing : "ongoing",
   cancel  : "cancel",
-  deny : "deny"
+  deny : "deny",
+  pay : "pay"
 }
 
+function paymentOrder(idOrder){
+  return dispatch=>{
+    dispatch(request("ON REQUEST.."));
+    kasirService.actionOrderService(idOrder,actionOrderKey.pay)
+    .then(
+      data=>{
+        dispatch(success(data));
+      },
+      error=>{
+        dispatch(failure(error.toString()));
+      }
+    )
+  }
 
+  function request(message){
+    return{
+      type: kasirConstans.ORDER_ACCEPT_REQUEST,message
+    }
+  }
+  function success(order) {
+    return {
+      type : kasirConstans.ORDER_ACCEPT_SUCCESS,order
+    }
+
+  }
+  function failure(error){
+    return {
+      type :kasirConstans.ORDER_ACCEPT_FAILURE , error
+    }
+  }
+}
 function acceptOrder(idOrder){
   return dispatch=>{
     dispatch(request("ON REQUEST.."));

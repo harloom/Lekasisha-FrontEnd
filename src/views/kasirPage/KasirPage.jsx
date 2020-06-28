@@ -47,8 +47,6 @@ import { authHeader ,getAPI} from '_helpers';
 import { kasirActions } from '_actions/index';
 import FromHeader from "components/Headers/FromHeader.js";
 
-import jsPdf from 'jspdf'
-import html2canvas from 'html2canvas'
 
 class KasirPage extends React.Component {
   state = {
@@ -108,7 +106,9 @@ class KasirPage extends React.Component {
     this.props.detailOrder(dataItem._id);
 
   }
-
+  paymentWithAdmin = (id)=>{
+    this.props.paymentOrder(id)
+  }
   handleButtonAction(event) {
     event.preventDefault();
     const index = event.currentTarget.getAttribute('value');
@@ -191,7 +191,6 @@ class KasirPage extends React.Component {
         .then(response => response.blob())
           .then((res) => {
             const pdfBlob = new Blob([res], { type: 'application/pdf' });
-           console.log(res)
             saveAs(pdfBlob, `${idFIle}.pdf`);
           })
       });
@@ -321,7 +320,7 @@ class KasirPage extends React.Component {
                     <div className="col-12"><hr /></div>
                     <div className="col"><h5>Total: </h5></div>
                     <div className="col"><h4>Rp. {orderDetail.gross_amount}</h4></div>
-                    <div className="col-12">
+                    <div className="col">
                       <button className="btn btn-primary btn-sm btn-icon btn-round" value={orderDetail._id}
                         onClick={(event)=>{
                           event.preventDefault()
@@ -332,7 +331,17 @@ class KasirPage extends React.Component {
                       Cetak
                       </button>
                     </div>
-
+                    <div className="col mt-1">
+                    <button className="btn btn-primary btn-sm btn-icon btn-round" value={orderDetail._id}
+                        onClick={(event)=>{
+                          event.preventDefault()
+                          this.paymentWithAdmin(orderDetail._id)
+                        }}
+                      >
+                        <i className="fa fa-check mx-1" />
+                        Pembayaran
+                      </button>
+                    </div>
                   </CardBody>
                 </Card>
               </div>
@@ -569,8 +578,8 @@ const actionCreators = {
   ongoingOrder: kasirActions.ongoingOrder,
   denyOrder: kasirActions.denyOrder,
   cancelOrder: kasirActions.cancelOrder,
-  finishOrder: kasirActions.finishOrder
-
+  finishOrder: kasirActions.finishOrder,
+  paymentOrder : kasirActions.paymentOrder
 }
 
 const connectedKasirPage = connect(mapState, actionCreators)(KasirPage);

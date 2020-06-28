@@ -21,6 +21,7 @@ import { connect } from 'react-redux';
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { SketchPicker } from 'react-color';
 // reactstrap components
+import { authHeader ,getAPI} from '_helpers';
 import {
   Card,
   CardHeader,
@@ -391,10 +392,20 @@ class BannerPage extends React.Component {
                           </th>
                           <td>{item.name}</td>
                           <td>
-                            <Badge color="" className="badge-dot mr-4">
-                              <i className="bg-warning" />
-                              {item.imagePath}
-                            </Badge>
+                          <a
+                                    key={index}
+                                    className="img-fluid img-thumbnail rounded "
+                                    href="#pablo"
+                                    id={item.imagePath}
+                                    onClick={e => e.preventDefault()}
+                                  >
+                                    <img
+                                      alt="..."
+                                      className="img-fluid img-thumbnail rounded "
+                                      src={`${getAPI()}/images/${item.imagePath}`}
+                                    />
+                                  </a>
+                          
                           </td>
                           <td>
                             {item.backgroundColor}
@@ -595,7 +606,7 @@ class BannerPage extends React.Component {
             <div className="alert alert-success" role="alert">
               "Berhasil di Edit"
                 </div> */}
-          }
+          
                     
                   {/* </div> */}
                   {/* <div className="text-center">

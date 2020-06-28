@@ -7,10 +7,46 @@ import { Container } from "reactstrap";
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import AdminFooter from "components/Footers/AdminFooter.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
-import { LoginPage } from "views/auth/LoginPage";
-import routes from "routes.js";
 
+import routes from "routes.js";
+import firebase from '_helpers/firebase'
+import { alertActions } from '_actions';
+import { connect } from 'react-redux';
 class Admin extends React.Component {
+  componentWillMount(){
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user && user.token) {
+        this.props.getNotification(1);
+        this.firbeaseFCM();
+    } 
+
+};
+    sendTokenToServer(token){
+        console.log("send token to server")
+        this.props.putToken(token);
+    }
+firbeaseFCM(){
+    const messaging = firebase.messaging();
+    messaging.requestPermission().then(()=>{
+        return messaging.getToken();
+    }).then(currentToken =>{
+        // console.log(`tokenFCM : ${currentToken}`);
+        if (currentToken) {
+            this.sendTokenToServer(currentToken);
+        
+        } else {
+            // Show permission request.
+            console.log('No Instance ID token available. Request permission to generate one.');
+            // Show permission UI.
+            this.firbeaseFCM();
+            
+        }
+    }).catch(err=>{
+
+    })
+}
+
+
   componentDidUpdate(e) {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
@@ -53,11 +89,14 @@ class Admin extends React.Component {
     return "Brand";
   };
   render() {
+    const { alert } = this.props;
+    
     return (
       <>
         <Sidebar
           {...this.props}
           routes={routes}
+          inbox = {alert}
           logo={{
             innerLink: "/admin/index",
             imgSrc: require("assets/img/brand/ic_app.png"),
@@ -81,5 +120,16 @@ class Admin extends React.Component {
     );
   }
 }
+function mapState(state) {
+  const { alert ,items} = state;
+  return { alert,items};
+}
 
-export default Admin;
+const actionCreators = {
+  clearAlerts: alertActions.clear,
+  putToken : alertActions.putToken,
+  getNotification : alertActions.getNotification
+};
+
+const connectedAdmin = connect(mapState, actionCreators)(Admin);
+export  default connectedAdmin  ;

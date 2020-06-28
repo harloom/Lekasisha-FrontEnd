@@ -52,6 +52,7 @@ class StoreSettins extends React.Component {
 
     this.state = {
       isOpen: false,
+      useBank : false,
       storeName: '',
       addresss: '',
       numberPhone: '',
@@ -128,7 +129,18 @@ class StoreSettins extends React.Component {
       [name]: value
     });
   }
-
+  handleOptionBankChange = event =>{
+    const value  = event.target.value;
+    if(value=="true"){
+      this.setState({
+        useBank: true
+      });
+    }else{
+      this.setState({
+        useBank: false
+      });
+    }
+  }
 
   handleOptionChange = changeEvent => {
     const value  = changeEvent.target.value;
@@ -164,7 +176,7 @@ class StoreSettins extends React.Component {
   render() {
 
     const {
-      submitted, modalIsOpen,
+      submitted, modalIsOpen,useBank,
       isOpen, storeName, addresss,numberPhone ,isSuccess,onRequest
     } = this.state;
 
@@ -245,7 +257,27 @@ class StoreSettins extends React.Component {
                       </FormGroup>
 
                     </FormGroup>
-             
+                    <FormGroup tag="fieldset">
+                      <legend>Gunakan pembayaran via bank?</legend>
+                      <FormGroup check>
+                        <Label check>
+                          <Input type="radio" name="radio2"
+                          value="true" checked={useBank==true}
+                          onChange={this.handleOptionBankChange}/>{' '}
+                        Mnggunakan
+                      </Label>
+                      </FormGroup>
+                      <FormGroup check>
+                        <Label check>
+                          <Input type="radio" name="radio2" 
+                          value='false'
+                          checked={useBank==false}
+                          onChange={this.handleOptionBankChange} />{' '}
+                          Tidak menggunakan
+                        </Label>
+                      </FormGroup>
+
+                    </FormGroup>
                     {
                             isSuccess &&
                             <div className="alert alert-success" role="alert">

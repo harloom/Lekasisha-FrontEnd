@@ -45,6 +45,7 @@ import {
   NavItem,
   NavLink,
   Nav,
+  Badge,
   Progress,
   Table,
   Container,
@@ -102,8 +103,24 @@ class Sidebar extends React.Component {
       );
     });
   };
+  createMessage = () => {
+    const {inbox } = this.props;
+    let selectMessage = []
+    // Outer loop to create parent
+    {inbox?.items?.docs?.forEach(element => {
+      selectMessage.push(<DropdownItem>`{element.msg}`</DropdownItem>)
+     
+    })}
+    // for (let i = 0; i < this.props.orders.items.totalPages; i++) {
+    //   //Create the parent and add the children
+    
+    // }
+    return selectMessage
+  }
   render() {
-    const { bgColor, routes, logo } = this.props;
+    const { bgColor, routes, logo , inbox } = this.props;
+   const items = inbox?.items;
+    // const   { items } = inbox;
     let navbarBrandProps;
     if (logo && logo.innerLink) {
       navbarBrandProps = {
@@ -143,21 +160,23 @@ class Sidebar extends React.Component {
           ) : null}
           {/* User */}
           <Nav className="align-items-center d-md-none">
-            {/* <UncontrolledDropdown nav>
+            <UncontrolledDropdown nav>
               <DropdownToggle nav className="nav-link-icon">
-                <i className="ni ni-bell-55" />
+                <i className="ni ni-bell-55" /> <Badge color="danger">{inbox?.items?.docs?.length ?? 0}</Badge>
               </DropdownToggle>
               <DropdownMenu
                 aria-labelledby="navbar-default_dropdown_1"
                 className="dropdown-menu-arrow"
                 right
               >
-                <DropdownItem>Action</DropdownItem>
+                   <DropdownItem divider />
+                  { items&&this.createMessage()}
+                {/* <DropdownItem>Action</DropdownItem>
                 <DropdownItem>Another action</DropdownItem>
-                <DropdownItem divider />
-                <DropdownItem>Something else here</DropdownItem>
+             
+                <DropdownItem>Something else here</DropdownItem> */}
               </DropdownMenu>
-            </UncontrolledDropdown> */}
+            </UncontrolledDropdown>
             <UncontrolledDropdown nav>
               <DropdownToggle nav>
                 <Media className="align-items-center">

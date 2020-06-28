@@ -2,4 +2,4 @@ export * from './fake-backend';
 export * from './history';
 export * from './store';
 export * from './auth-header';
-export * from './server-api'
+export * from './server-api';
