@@ -2,5 +2,5 @@
 //   return 'https://lakeishaapp.herokuapp.com';
 // }
 export function getAPI(){
-  return 'https://lakeisha.store';
+  return 'http://lakeisha.store';
 }
